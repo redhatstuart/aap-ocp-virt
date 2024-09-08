@@ -3,8 +3,6 @@
   hosts: all
   become: true
   tasks:
-    - name: Disconnect all hosts from Red Hat Network
-      command: "rhc disconnect"
   
     - name: Stop and Disable Apache
       ansible.builtin.systemd:
@@ -39,3 +37,6 @@
           - php-xml
           - php-mbstring
         state: absent
+
+    - name: Disconnect all hosts from Red Hat Network
+      command: "rhc disconnect"
