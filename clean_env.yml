@@ -38,5 +38,9 @@
           - php-mbstring
         state: absent
 
-    - name: Disconnect all hosts from Red Hat Network
-      command: "rhc disconnect"
+    - name: Disconnect from Red Hat Subscriptions and Red Hat Network
+      community.general.redhat_subscription:
+        state: absent
+        activationkey: {{ key }}
+        org_id: {{ org_id }}
+    
