@@ -4,6 +4,14 @@
   become: true
 
   tasks:
+
+    - name: Register with activation key and auto attach subscriptions
+      community.general.redhat_subscription:
+        state: present
+        activationkey: {{ key }}
+        org_id: {{ org_id }}
+        auto_attach: true
+  
     - name: Install Apache
       ansible.builtin.dnf:
         name: httpd
