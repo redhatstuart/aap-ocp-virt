@@ -8,14 +8,14 @@
         name: httpd
         state: stopped
         enabled: false
-        ignore_errors: true
+      ignore_errors: true
 
     - name: Stop and Disable MariaDB
       ansible.builtin.systemd_service:
         name: mariadb
         state: stopped
         enabled: false
-        ignore_errors: true
+      ignore_errors: true
         
     - name: Remove Apache
       ansible.builtin.dnf:
