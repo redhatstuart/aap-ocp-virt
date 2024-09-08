@@ -17,7 +17,7 @@
         state: present
 
     - name: Start and enable Apache
-      ansible.builtin.systemd:
+      ansible.builtin.service:
         name: httpd
         state: started
         enabled: true
@@ -28,7 +28,7 @@
         state: present
 
     - name: Start and enable MariaDB
-      ansible.builtin.systemd:
+      ansible.builtin.service:
         name: mariadb
         state: started
         enabled: true
@@ -46,6 +46,6 @@
         state: present
 
     - name: Restart Apache to load PHP modules
-      ansible.builtin.systemd:
+      ansible.builtin.service:
         name: httpd
         state: restarted
