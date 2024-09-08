@@ -1,8 +1,6 @@
 ---
 - name: Install LAMP Stack on RHEL 9
   hosts: all
-  become: true
-
   tasks:
 
     - name: Register with activation key and auto attach subscriptions
@@ -16,23 +14,6 @@
         name: httpd
         state: present
 
-    - name: Start and enable Apache
-      ansible.builtin.service:
-        name: httpd
-        state: started
-        enabled: true
-
-    - name: Install MariaDB
-      ansible.builtin.dnf:
-        name: mariadb-server
-        state: present
-
-    - name: Start and enable MariaDB
-      ansible.builtin.service:
-        name: mariadb
-        state: started
-        enabled: true
-
     - name: Install PHP and common modules
       ansible.builtin.dnf:
         name:
@@ -45,7 +26,24 @@
           - php-mbstring
         state: present
 
+    - name: Install MariaDB
+      ansible.builtin.dnf:
+        name: mariadb-server
+        state: present
+
+    - name: Start and enable Apache
+      ansible.builtin.systemd_service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Start and enable MariaDB
+      ansible.builtin.systemd_service:
+        name: mariadb
+        state: started
+        enabled: true
+
     - name: Restart Apache to load PHP modules
-      ansible.builtin.service:
+      ansible.builtin.systemd_service:
         name: httpd
         state: restarted
