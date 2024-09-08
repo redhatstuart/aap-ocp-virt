@@ -5,13 +5,13 @@
   tasks:
   
     - name: Stop and Disable Apache
-      ansible.builtin.systemd:
+      ansible.builtin.service:
         name: httpd
         state: stopped
         enabled: false
 
     - name: Stop and Disable MariaDB
-      ansible.builtin.systemd:
+      ansible.builtin.service:
         name: mariadb
         state: stopped
         enabled: false
