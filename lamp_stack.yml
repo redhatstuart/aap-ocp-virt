@@ -10,7 +10,6 @@
         state: present
         activationkey: "{{ key }}"
         org_id: "{{ org_id }}"
-        auto_attach: true
   
     - name: Install Apache
       ansible.builtin.dnf:
