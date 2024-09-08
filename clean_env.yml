@@ -41,6 +41,6 @@
     - name: Disconnect from Red Hat Subscriptions and Red Hat Network
       community.general.redhat_subscription:
         state: absent
-        activationkey: {{ key }}
-        org_id: {{ org_id }}
+        activationkey: "{{ key }}"
+        org_id: "{{ org_id }}"
     
