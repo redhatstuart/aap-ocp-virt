@@ -1,6 +1,6 @@
 ---
 plugin: kubevirt.core.kubevirt
-validate_certs: false
 connections:
 - namespaces:
   - linuxvm
+  verify_ssl: false
