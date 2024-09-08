@@ -2,16 +2,17 @@
 - name: Remove LAMP Stack on RHEL 9
   hosts: all
   become: true
-
   tasks:
+    - name: Disconnect all hosts from Red Hat Network
+      command: "rhc disconnect"
   
-    - name: stop and disable Apache
+    - name: Stop and Disable Apache
       ansible.builtin.systemd:
         name: httpd
         state: stopped
         enabled: false
 
-    - name: stop and disable MariaDB
+    - name: Stop and Disable MariaDB
       ansible.builtin.systemd:
         name: mariadb
         state: stopped
@@ -21,7 +22,6 @@
       ansible.builtin.dnf:
         name: httpd
         state: absent
-
 
     - name: Remove MariaDB
       ansible.builtin.dnf:
