@@ -1,17 +1,16 @@
 ---
 - name: Remove LAMP Stack on RHEL 9
   hosts: all
-  become: true
   tasks:
   
     - name: Stop and Disable Apache
-      ansible.builtin.service:
+      ansible.builtin.systemd_service:
         name: httpd
         state: stopped
         enabled: false
 
     - name: Stop and Disable MariaDB
-      ansible.builtin.service:
+      ansible.builtin.systemd_service:
         name: mariadb
         state: stopped
         enabled: false
