@@ -1,3 +1,4 @@
 ---
 # vars file for virt-plan
 plan_name: ansible-mtv
+networkmap_name: ansible-map
