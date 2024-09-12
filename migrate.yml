@@ -1,0 +1,9 @@
+---
+- name: Playbook for OpenShift Virt
+  hosts: localhost
+  collections:
+    - rlopez.ocp_virt
+
+  roles:
+  # - {role: rlopez.ocp_virt.providers}
+  - {role: rlopez.ocp_virt.virt_plan}

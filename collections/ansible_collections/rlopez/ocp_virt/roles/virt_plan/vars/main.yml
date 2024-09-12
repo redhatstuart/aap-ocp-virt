@@ -1,2 +1,3 @@
 ---
 # vars file for virt-plan
+plan_name: ansible-mtv
