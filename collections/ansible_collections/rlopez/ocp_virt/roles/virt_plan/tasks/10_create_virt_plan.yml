@@ -47,7 +47,7 @@
 - name: Capture the distributed portgroup id to make network mappings
   ansible.builtin.set_fact:
     portgroup_id: "{{ item.network }}"
-  loop: "{{ my_portgroup.value[0] | dict2items }}"
+  loop: "{{ my_portgroup.value }}"
   when: item.name == portgroup_name
 
 - name: Create or update a NetworkMap
