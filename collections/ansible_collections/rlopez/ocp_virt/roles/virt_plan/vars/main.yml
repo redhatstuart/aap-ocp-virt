@@ -3,3 +3,5 @@
 plan_name: ansible-mtv
 networkmap_name: ansible-network-map
 storagemap_name: ansible-storage-map
+migration_target_namespace: openshift-mtv
+portgroup_name: "helios-vm-10.253.49.0_25--v450"
