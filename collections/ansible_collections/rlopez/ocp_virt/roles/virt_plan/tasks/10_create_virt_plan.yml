@@ -1,7 +1,7 @@
 ---
 - name: Build a list of all the folders
   vmware.vmware_rest.vcenter_folder_info:
-  vcenter_validate_certs: false
+    vcenter_validate_certs: false
   register: all_folders
 
 - name: Filter VM folders
@@ -10,6 +10,7 @@
 
 - name: Check each VM folder for VMs
   vmware.vmware_rest.vcenter_vm_info:
+    vcenter_validate_certs: false
     folders: "{{ item.folder }}"
   register: vm_folders_with_vms
   loop: "{{ vm_folders }}"
@@ -39,10 +40,11 @@
 
 - name: Get information for the distributed port group 'segment-migrating-to-ocpvirt'
   vmware.vmware_rest.vcenter_network_info:
+    vcenter_validate_certs: false
     filter_types: DISTRIBUTED_PORTGROUP
   register: my_portgroup
 
-- name: Capture the distrivuted portgroup id to make network mappings
+- name: Capture the distributed portgroup id to make network mappings
   ansible.builtin.set_fact:
     portgroup_id: "{{ my_portgroup.value[0].network }}"
 
