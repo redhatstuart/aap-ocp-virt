@@ -73,37 +73,6 @@
             name: "{{ source_name }}"
             namespace:  "{{ migration_namespace }}" #openshift-mtv
 
-- name: Build a list of all the datastores
-  vmware.vmware_rest.vcenter_datastore_info:
-  register: all_the_datastores
-
-# - name: Capture the datastore id
-#   set_fact:
-#     datastore_id: "{{ all_the_datastores.value[0].datastore }}"
-
-# - name: Create or update a StorageMap
-#   kubernetes.core.k8s:
-#     state: present
-#     definition:
-#       apiVersion: forklift.konveyor.io/v1beta1
-#       kind: StorageMap
-#       metadata:
-#         name: "{{ storagemap_name }}"
-#         namespace: "{{ migration_namespace }}"
-#       spec:
-#         map:
-#           - destination:
-#               storageClass: ocs-storagecluster-ceph-rbd
-#             source:
-#               id: "{{ datastore_id }}"
-#         provider:
-#           destination:
-#             name: host
-#             namespace: "{{ migration_namespace }}"
-#           source:
-#             name: vmware
-#             namespace: "{{ migration_namespace }}"
-
 - name: Get storage class information
   kubernetes.core.k8s_info:
     api_version: storage.k8s.io/v1
@@ -122,6 +91,40 @@
 - name: Print default storage class name
   debug:
     msg: "{{ default_storage_class }}"
+
+- name: Build a list of all the datastores
+  vmware.vmware_rest.vcenter_datastore_info:
+  register: all_the_datastores
+
+- name: Capture the datastore id
+  set_fact:
+    datastore_id: "{{ item.datastore }}"
+  loop: "{{ all_the_datastores.value }}"
+  when: all_the_datastores.name == vm_datastore
+
+- name: Create or update a StorageMap
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: StorageMap
+      metadata:
+        name: "{{ storagemap_name }}"
+        namespace: "{{ migration_namespace }}"
+      spec:
+        map:
+          - destination:
+              storageClass: "{{ default_storage_class }}"
+            source:
+              id: "{{ datastore_id }}"
+              name: "{{ vm_datastore }}"
+        provider:
+          destination:
+            name: host
+            namespace: "{{ migration_namespace }}"
+          source:
+            name: "{{ source_name }}"
+            namespace: "{{ migration_namespace }}"
 
 - name: Create or update a StorageMap
   kubernetes.core.k8s:
