@@ -1,6 +1,7 @@
 ---
 - name: Build a list of all the folders
   vmware.vmware_rest.vcenter_folder_info:
+  vcenter_validate_certs: false
   register: all_folders
 
 - name: Filter VM folders

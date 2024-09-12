@@ -1,6 +1,7 @@
 - name: Deploy Provider resource
   kubernetes.core.k8s:
     state: present
+    validate_certs: false
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
       kind: Provider
@@ -9,10 +10,9 @@
         namespace: "{{ provider_namespace }}"
       spec:
         secret:
-          name: "{{ vmware_credentials }}"
+          name: "{{ vmware_creds }}"
           namespace: "{{ provider_namespace }}"
         settings:
           vddkInitImage: 'image-registry.openshift-image-registry.svc:5000/openshift/vddk:latest'
         type: vsphere
         url: 'https://{{ vmware_host }}/sdk'
-
