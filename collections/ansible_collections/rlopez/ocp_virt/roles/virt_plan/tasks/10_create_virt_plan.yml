@@ -94,13 +94,14 @@
 
 - name: Build a list of all the datastores
   vmware.vmware_rest.vcenter_datastore_info:
+    vcenter_validate_certs: false
   register: all_the_datastores
 
 - name: Capture the datastore id
   set_fact:
     datastore_id: "{{ item.datastore }}"
   loop: "{{ all_the_datastores.value }}"
-  when: all_the_datastores.name == vm_datastore
+  when: item.name == vm_datastore
 
 - name: Create or update a StorageMap
   kubernetes.core.k8s:
