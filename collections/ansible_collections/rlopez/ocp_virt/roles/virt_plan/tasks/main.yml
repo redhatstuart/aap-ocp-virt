@@ -1,3 +1,0 @@
----
-# tasks file for virt-plan
-- include_tasks: 10_create_virt_plan.yml

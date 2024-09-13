@@ -1,9 +1,8 @@
 ---
-- name: Playbook for OpenShift Virt
+- name: Migrate vm from vsphere to OCP virt
   hosts: localhost
   collections:
-    - rlopez.ocp_virt
+    - mtv_demo.ocp_virt
 
   roles:
-  # - {role: rlopez.ocp_virt.providers}
-  - {role: rlopez.ocp_virt.virt_plan}
+  - {role: mtv_demo.ocp_virt.virt_plan}
