@@ -2,5 +2,3 @@
 # defaults file for virt-plan
 random_suffix_network: "{{ lookup('community.general.random_string', length=5, special=false, upper=false) }}"
 random_suffix_storage: "{{ lookup('community.general.random_string', length=5, special=false, upper=false) }}"
-migration_namespace: "openshift-mtv"
-migration_target_namespace: "aap"
