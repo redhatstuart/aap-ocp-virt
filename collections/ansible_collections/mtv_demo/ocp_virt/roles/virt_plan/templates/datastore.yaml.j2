@@ -1,0 +1,21 @@
+---
+apiVersion: forklift.konveyor.io/v1beta1
+kind: StorageMap
+metadata:
+  name: "{{ storagemap_name }}"
+  namespace: "{{ migration_namespace }}" # openshift-mtv
+spec:
+  map:
+    - destination:
+        storageClass: "{{ default_storage_class }}"
+      source:
+        id: {{ datastore_id }}
+{% endfor %}
+
+  provider:
+    destination:
+      name: host
+      namespace: "{{ migration_namespace }}"
+    source:
+      name: "{{ source_name }}"
+      namespace: "{{ migration_namespace }}"

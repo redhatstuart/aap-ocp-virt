@@ -1,0 +1,179 @@
+---
+- name: Build a list of all the folders
+  vmware.vmware_rest.vcenter_folder_info:
+    vcenter_validate_certs: false
+  register: all_folders
+
+- name: Filter VM folders
+  ansible.builtin.set_fact:
+    vm_folders: "{{ all_folders.value | selectattr('type', 'equalto', 'VIRTUAL_MACHINE') | list }}"
+
+- name: Check each VM folder for VMs
+  vmware.vmware_rest.vcenter_vm_info:
+    vcenter_validate_certs: false
+    folders: "{{ item.folder }}"
+  register: vm_folders_with_vms
+  loop: "{{ vm_folders }}"
+  when: vm_folders | length > 0
+
+- name: Display VM names and IDs
+  ansible.builtin.debug:
+    msg: "VM Name: {{ item.name }}, VM ID: {{ item.vm }}"
+  loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
+  when: item | length > 0
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Collect VM names and IDs
+  ansible.builtin.set_fact:
+    vm_name_id_pairs: "{{ vm_name_id_pairs | default([]) + [{'name': item.name, 'vm': item.vm}] }}"
+  loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
+  when: item | length > 0
+
+- name: Prepare VMs for Plan spec
+  ansible.builtin.set_fact:
+    vms_for_plan_spec: "{{ vms_for_plan_spec | default([]) + [{'hooks': [], 'id': vm_id.vm}] }}"
+  loop: "{{ vm_name_id_pairs }}"
+  loop_control:
+    loop_var: vm_id
+  when: vm_id.name in user_selected_vm_names.split('\n')
+
+- name: Get information for the distributed port group 'segment-migrating-to-ocpvirt'
+  vmware.vmware_rest.vcenter_network_info:
+    vcenter_validate_certs: false
+    filter_types: DISTRIBUTED_PORTGROUP
+  register: my_portgroup
+
+- name: Capture the distributed portgroup id to make network mappings
+  ansible.builtin.set_fact:
+    portgroup_id: "{{ item.network }}"
+  loop: "{{ my_portgroup.value }}"
+  when: item.name == portgroup_name
+
+- name: Create or update a NetworkMap
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: NetworkMap
+      metadata:
+        name: "{{ networkmap_name }}"
+        namespace: "{{ migration_namespace }}" # openshift-mtv
+      spec:
+        map:
+          - destination:
+              type: pod
+            source:
+              id: "{{ portgroup_id }}"
+        provider:
+          destination:
+            name: host
+            namespace: "{{ migration_namespace }}" # openshift-mtv
+          source:
+            name: "{{ source_name }}"
+            namespace:  "{{ migration_namespace }}" #openshift-mtv
+
+- name: Get storage class information
+  kubernetes.core.k8s_info:
+    api_version: storage.k8s.io/v1
+    kind: StorageClass
+  register: storage_classes
+
+- name: Find default storage class
+  set_fact:
+    default_storage_class: "{{ item.metadata.name }}"
+  loop: "{{ storage_classes.resources }}"
+  when:
+    - item.metadata.annotations is defined
+    - "'storageclass.kubernetes.io/is-default-class' in item.metadata.annotations"
+    - item.metadata.annotations['storageclass.kubernetes.io/is-default-class'] == 'true'
+
+- name: Print default storage class name
+  debug:
+    msg: "{{ default_storage_class }}"
+
+- name: Build a list of all the datastores
+  vmware.vmware_rest.vcenter_datastore_info:
+    vcenter_validate_certs: false
+  register: all_the_datastores
+
+- name: Capture the datastore id
+  set_fact:
+    datastore_id: "{{ item.datastore }}"
+  loop: "{{ all_the_datastores.value }}"
+  when: item.name == vm_datastore
+
+- name: Create or update a StorageMap
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: StorageMap
+      metadata:
+        name: "{{ storagemap_name }}"
+        namespace: "{{ migration_namespace }}"
+      spec:
+        map:
+          - destination:
+              storageClass: "{{ default_storage_class }}"
+            source:
+              id: "{{ datastore_id }}"
+              name: "{{ vm_datastore }}"
+        provider:
+          destination:
+            name: host
+            namespace: "{{ migration_namespace }}"
+          source:
+            name: "{{ source_name }}"
+            namespace: "{{ migration_namespace }}"
+
+# - name: Create or update a StorageMap
+#   kubernetes.core.k8s:
+#     namespace: "{{ migration_namespace }}"
+#     definition: "{{ lookup('template', 'datastore.yaml.j2' ) | from_yaml }}"
+#     state: present
+
+- name: Deploy Virt Plan
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Plan
+      metadata:
+        name: "{{ plan_name }}"
+        namespace: "{{ migration_namespace }}"
+      spec:
+        archived: false
+        description: ''
+        map:
+          network:
+            name: "{{ networkmap_name }}"
+            namespace: "{{ migration_namespace }}"
+          storage:
+            name: "{{ storagemap_name }}"
+            namespace: "{{ migration_namespace }}"
+        provider:
+          destination:
+            name: host
+            namespace: "{{ migration_namespace }}"
+          source:
+            name: "{{ source_name }}"
+            namespace: "{{ migration_namespace }}"
+        targetNamespace: "{{ migration_target_namespace }}"
+        vms: "{{ vms_for_plan_spec }}"
+        warm: false
+
+- name: Create a Migration manifest to run the Plan CR
+  kubernetes.core.k8s:
+    api_version: forklift.konveyor.io/v1beta1
+    kind: Migration
+    namespace: "{{ migration_namespace }}"
+    name: "{{ plan_name }}"
+    definition:
+      metadata:
+        name: "{{ plan_name }}"
+        namespace: "{{ migration_namespace }}"
+      spec:
+        plan:
+          name: "{{ plan_name }}"
+          namespace: "{{ migration_namespace }}"
