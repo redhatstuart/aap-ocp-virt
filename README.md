@@ -22,6 +22,6 @@ Using OpenShift Virtualization as the inventory source, deploy LAMP stack to the
 
 ### additional info
 
-[Red Hat OpenShift Virtualization]('https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization')
+[Red Hat OpenShift Virtualization](https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization)
 
-[WWT Ansible Learning Labs]('https://www.wwt.com/learning-series/infrastructure-automation')
+[WWT Ansible Learning Labs](https://www.wwt.com/learning-series/infrastructure-automation)
