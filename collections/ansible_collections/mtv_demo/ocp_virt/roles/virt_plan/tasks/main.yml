@@ -1,3 +1,4 @@
 ---
 # tasks file for virt-plan
-- include_tasks: create_virt_plan.yml
+- name: Include virtual plan task
+  ansible.builtin.include_tasks: create_virt_plan.yml

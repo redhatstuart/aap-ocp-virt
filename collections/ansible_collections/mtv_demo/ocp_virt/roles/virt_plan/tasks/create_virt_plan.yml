@@ -58,7 +58,7 @@
       kind: NetworkMap
       metadata:
         name: "{{ networkmap_name }}"
-        namespace: "{{ migration_namespace }}" # openshift-mtv
+        namespace: "{{ migration_namespace }}"
       spec:
         map:
           - destination:
@@ -68,10 +68,10 @@
         provider:
           destination:
             name: host
-            namespace: "{{ migration_namespace }}" # openshift-mtv
+            namespace: "{{ migration_namespace }}"
           source:
             name: "{{ source_name }}"
-            namespace:  "{{ migration_namespace }}" #openshift-mtv
+            namespace: "{{ migration_namespace }}"
 
 - name: Get storage class information
   kubernetes.core.k8s_info:
@@ -80,7 +80,7 @@
   register: storage_classes
 
 - name: Find default storage class
-  set_fact:
+  ansible.builtin.set_fact:
     default_storage_class: "{{ item.metadata.name }}"
   loop: "{{ storage_classes.resources }}"
   when:
@@ -89,7 +89,7 @@
     - item.metadata.annotations['storageclass.kubernetes.io/is-default-class'] == 'true'
 
 - name: Print default storage class name
-  debug:
+  ansible.builtin.debug:
     msg: "{{ default_storage_class }}"
 
 - name: Build a list of all the datastores
@@ -98,7 +98,7 @@
   register: all_the_datastores
 
 - name: Capture the datastore id
-  set_fact:
+  ansible.builtin.set_fact:
     datastore_id: "{{ item.datastore }}"
   loop: "{{ all_the_datastores.value }}"
   when: item.name == vm_datastore
