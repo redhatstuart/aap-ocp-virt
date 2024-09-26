@@ -3,4 +3,4 @@ plugin: kubevirt.core.kubevirt
 namespaces:
   - linuxvm
   - migrationfactory
-  
+validate_certs: false
