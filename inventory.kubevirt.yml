@@ -1,7 +1,6 @@
 ---
 plugin: kubevirt.core.kubevirt
-connections:
-- namespaces:
+namespaces:
   - linuxvm
   - migrationfactory
-  verify_ssl: false
+verify_ssl: false
