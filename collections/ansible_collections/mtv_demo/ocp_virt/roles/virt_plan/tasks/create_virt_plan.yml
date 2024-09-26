@@ -50,6 +50,13 @@
   loop: "{{ my_portgroup.value }}"
   when: item.name == portgroup_name
 
+- name: Ensuring target OpenShift project exists
+  kubernetes.core.k8s:
+    name: "{{ migration_target_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+
 - name: Create or update a NetworkMap
   kubernetes.core.k8s:
     state: present
