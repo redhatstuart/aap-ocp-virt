@@ -1,0 +1,6 @@
+---
+- name: Migrate vm from vsphere to OCP virt
+  hosts: localhost
+
+  roles:
+    - { role: mtv_demo.ocp_virt.vmware_data_collection }

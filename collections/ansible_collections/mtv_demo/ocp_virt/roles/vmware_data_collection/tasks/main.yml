@@ -1,1 +1,36 @@
 ---
+- name: Build a list of all the folders
+  vmware.vmware_rest.vcenter_folder_info:
+    vcenter_validate_certs: false
+  register: all_folders
+
+- name: Filter VM folders
+  ansible.builtin.set_fact:
+    vm_folders: "{{ all_folders.value | selectattr('type', 'equalto', 'VIRTUAL_MACHINE') | list }}"
+
+- name: Check each VM folder for VMs
+  vmware.vmware_rest.vcenter_vm_info:
+    vcenter_validate_certs: false
+    folders: "{{ item.folder }}"
+  register: vm_folders_with_vms
+  loop: "{{ vm_folders }}"
+  when: vm_folders | length > 0
+
+- name: Display VM names and IDs
+  ansible.builtin.debug:
+    msg: "VM Name: {{ item.name }}, VM ID: {{ item.vm }}"
+  loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
+  when: item | length > 0
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Collect VM names and IDs
+  ansible.builtin.set_stat:
+    vm_name_id_pairs: "{{ vm_name_id_pairs | default([]) + [{'name': item.name, 'vm': item.vm}] }}"
+  loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
+  when: item | length > 0
+
+# testing portion
+- name: Print VM names and IDs
+  ansible.builtin.debug:
+    msg: "{{ vm_name_id_pairs }}"
