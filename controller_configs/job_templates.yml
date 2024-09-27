@@ -1,0 +1,55 @@
+---
+controller_templates:
+  - name: Test Dynamic Survey Workflow
+    job_type: run
+    inventory: localhost
+    execution_environment: OCP Virt EE
+    project: mtv-dev
+    playbook: migrate.yml
+    credentials:
+      - ocp-virt-vault
+      - helios-vcsa
+      - Dell APEX OpenShift Bearer Token
+    survey_enabled: true
+    survey_spec: {
+      "name": "Basic Survey",
+      "description": "Basic Survey",
+      "spec": [
+        {
+          "question_description": "plan_name",
+          "min": 3,
+          "default": "",
+          "max": 75,
+          "required": true,
+          "choices": "",
+          "new_question": true,
+          "variable": "plan_name",
+          "question_name": "What is the plan name?",
+          "type": "text"
+        },
+        {
+          "question_description": "namespace",
+          "min": 5,
+          "default": "virtualmachines",
+          "max": 60,
+          "required": true,
+          "choices": "",
+          "new_question": true,
+          "variable": "migration_target_namespace",
+          "question_name": "Enter the target OpenShift project namespace for the virtual machines?",
+          "type": "text"
+        },
+        {
+          "question_description": "vms to migrate",
+          "min": 0,
+          "default": "",
+          "max": 0,
+          "required": true,
+          "choices": "{{ vm_choices }}",
+          "new_question": true,
+          "variable": "user_selected_vm_names",
+          "question_name": "Which VM(s) to migrate?",
+          "type": "multiselect"
+        }
+      ]
+    }
