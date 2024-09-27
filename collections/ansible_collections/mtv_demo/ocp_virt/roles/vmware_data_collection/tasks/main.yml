@@ -33,5 +33,9 @@
 # testing portion
 - name: Print VM names and IDs
   ansible.builtin.debug:
-    msg: "{{ vm_survey_list | default() + item + '\n' }}"
-  loop: "{{ vm_name_id_pairs | selectattr('name') }}"
+    msg: "{{ vm_name_id_pairs }}"
+
+- name: Print VM with folders
+  ansible.builtin.debug:
+    msg:  "{{ vm_folders_with_vms.results }}"
+    # msg:  "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
