@@ -25,7 +25,7 @@
     label: "{{ item.name }}"
 
 - name: Collect VM names and IDs
-  ansible.builtin.set_stat:
+  ansible.builtin.set_fact:
     vm_name_id_pairs: "{{ vm_name_id_pairs | default([]) + [{'name': item.name, 'vm': item.vm}] }}"
   loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
   when: item | length > 0
