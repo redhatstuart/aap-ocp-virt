@@ -43,6 +43,6 @@
   loop_control:
     loop_var: present_vms
 
-- name: Print final string
-  ansible.builtin.debug:
-    vms_for_survey: "{{ vms_for_survey }}"
+# - name: Print final string
+#   ansible.builtin.debug:
+#     vms_for_survey: "{{ vms_for_survey }}"
