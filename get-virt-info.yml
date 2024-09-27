@@ -1,0 +1,23 @@
+---
+- name: Playbook to build OpenShift Virtualization Documentation
+  hosts: localhost
+
+  tasks:
+    - name: Gather info from OCP
+      redhat.openshift_virtualization.kubevirt_vm_info:
+        validate_certs: false
+        namespace: virtualmachines
+        name: fedora-wwt-testvm
+        # host: console-openshift-console.apps.acp-openshift.acprhos.wwtatc.com
+        # username: bob
+        # password: "{{ oc_password }}"
+      register: vm_list
+
+    - name: Print vm_list
+      ansible.builtin.debug:
+        msg: "{{ item.metadata.labels.app }}"
+      loop: "{{ vm_list['resources'] }}"
+
+# namespace
+# storage
+# printablestatus

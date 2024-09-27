@@ -1,0 +1,9 @@
+---
+pre_tasks:
+  - name: Include vars from controller_configs dir
+    ansible.builtin.include_vars:
+      dir: ./controller_configs
+      extensions: [yml]
+
+roles:
+  - { role: infra.controller_configuration.job_templates, when: controller_templates is defined and controller_oauthtoken is defined }
