@@ -1,0 +1,9 @@
+---
+- name: Test set facts
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Print vms for survey
+      ansible.builtin.debug:
+        msg: "{{ vms_for_survey }}"
