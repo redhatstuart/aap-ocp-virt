@@ -33,8 +33,4 @@
 # testing portion
 - name: Print VM names and IDs
   ansible.builtin.debug:
-    msg: "{{ vm_name_id_pairs }}"
-
-- name: Include conroller config role
-  ansible.builtin.include_role:
-    name: aap_config
+    msg: "{{ vm_name_id_pairs | map(attribute='name') }}"
