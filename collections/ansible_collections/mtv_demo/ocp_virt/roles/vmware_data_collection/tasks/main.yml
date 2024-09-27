@@ -36,12 +36,12 @@
     msg: "{{ vm_name_id_pairs }}"
 
 - name: Print vm_name_id_pairs
-  ansible.builtin.set_fact:
+  ansible.builtin.set_stats:
     vms_for_survey: "{{ vms_for_survey | default () + ( present_vms.name + '\n' ) }}"
   loop: "{{ vm_name_id_pairs }}"
   loop_control:
     loop_var: present_vms
 
-- name: Print final string
-  ansible.builtin.debug:
-    msg: "{{ vms_for_survey }}"
+# - name: Print final string
+#   ansible.builtin.debug:
+#     msg: "{{ vms_for_survey }}"

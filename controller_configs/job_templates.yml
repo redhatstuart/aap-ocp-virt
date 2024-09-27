@@ -45,7 +45,7 @@ controller_templates:
           "default": "",
           "max": 0,
           "required": true,
-          "choices": "{{ vm_choices }}",
+          "choices": "{{ vms_for_survey }}",
           "new_question": true,
           "variable": "user_selected_vm_names",
           "question_name": "Which VM(s) to migrate?",
