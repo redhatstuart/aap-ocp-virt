@@ -35,7 +35,13 @@
   ansible.builtin.debug:
     msg: "{{ vm_name_id_pairs }}"
 
-- name: Print VM with folders
+- name: Print vm_name_id_pairs
+  ansible.builtin.set_fact:
+    vms_for_survey: "{{ vms_for_survey | default () + ( present_vms.name + '\n' ) }}"
+  loop: "{{ vm_name_id_pairs }}"
+  loop_control:
+    loop_var: present_vms
+
+- name: Print final string
   ansible.builtin.debug:
-    msg:  "{{ vm_folders_with_vms.results }}"
-    # msg:  "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
+    msg: "{{ vms_for_survey }}"
