@@ -1,6 +1,6 @@
 ---
 controller_templates:
-  - name: Migrate 1: VMware to OpenShift Virtualization
+  - name: "Migrate 1: VMware to OpenShift Virtualization"
     job_type: run
     inventory: localhost
     execution_environment: OCP Virt EE
