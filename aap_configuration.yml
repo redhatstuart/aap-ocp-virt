@@ -2,12 +2,7 @@
 - name: Playbook to configure AAP
   hosts: localhost
   connection: local
-  # gather_facts: false
-  # vars:
-  #   controller_validate_certs: false
-  #   controller_hostname: "{{ controller_name }}"
-  #   controller_oauthtoken: "{{ controller_token }}"
-  #   controller_username: "{{ controller_un }}"
+  gather_facts: false
 
   pre_tasks:
     - name: Include vars from controller_configs dir
@@ -16,12 +11,4 @@
         extensions: [yml]
 
   roles:
-    # - { role: infra.controller_configuration.organizations, when: controller_organizations is defined and controller_oauthtoken is defined }
-    # - { role: infra.controller_configuration.execution_environments, when: controller_execution_environments is defined and controller_oauthtoken is defined}
-    # - { role: infra.controller_configuration.projects, when: controller_projects is defined and controller_oauthtoken is defined }
-    # - { role: infra.controller_configuration.inventories, when: controller_inventories is defined and controller_oauthtoken is defined }
-    # - { role: infra.controller_configuration.credential_types, when: controller_credential_types is defined and controller_oauthtoken is defined }
-    # - { role: infra.controller_configuration.credentials, when: controller_credentials is defined and controller_oauthtoken is defined }
-    # - { role: infra.controller_configuration.inventory_sources, when: controller_inventory_sources is defined and controller_oauthtoken is defined }
     - { role: infra.controller_configuration.job_templates, when: controller_templates is defined and controller_oauthtoken is defined }
-    # - { role: infra.controller_configuration.hosts, when: controller_hosts is defined and controller_oauthtoken is defined }

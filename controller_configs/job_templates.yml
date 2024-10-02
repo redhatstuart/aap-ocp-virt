@@ -1,10 +1,10 @@
 ---
 controller_templates:
-  - name: Test Dynamic Survey Workflow
+  - name: Migrate 1: VMware to OpenShift Virtualization
     job_type: run
     inventory: localhost
     execution_environment: OCP Virt EE
-    project: mtv-dev
+    project: AAP OCP Virtualization Integration
     playbook: migrate.yml
     credentials:
       - ocp-virt-vault
