@@ -9,4 +9,3 @@
       state: absent
     with_items:
       - conn_name: ens33
-
