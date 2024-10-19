@@ -13,7 +13,7 @@ metadata:
     - VMWare
     - Migration
     - vCenter
-    language: YAML
+  language: YAML
 projects:
   - name: "aap-ocp-virt"
     git:
