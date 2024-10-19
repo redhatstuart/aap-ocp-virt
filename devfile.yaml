@@ -26,8 +26,8 @@ components:
   - name: tooling-container
     container:
       image: ghcr.io/ansible/ansible-workspace-env-reference@sha256:03d7f0fe6caaae62ff2266906b63d67ebd9cf6e4a056c7c0a0c1320e6cfbebce
-      memoryRequest: 1Gi
-      memoryLimit: 8Gi
+      memoryRequest: 1G
+      memoryLimit: 8G
       cpuRequest: 500m
       cpuLimit: 2000m
       volumeMounts:
@@ -42,7 +42,7 @@ components:
           value: ~/.ansible/collections:/usr/share/ansible/collections:/projects/ansible-devspaces-demo/collections
   - name: homeuserlocal
     volume:
-      size: 2Gi
+      size: 2G
 commands:
   - id: molecule-create
     exec:
