@@ -31,8 +31,8 @@ components:
       cpuRequest: 500m
       cpuLimit: 2000m
       volumeMounts:
-        - name: userhomedir
-          path: /home/user
+        - name: homeuserlocal
+          path: /home/user/.local
       args:
         - tail
         - '-f'
@@ -40,7 +40,7 @@ components:
       env:
         - name: ANSIBLE_COLLECTIONS_PATH
           value: ~/.ansible/collections:/usr/share/ansible/collections:/projects/ansible-devspaces-demo/collections
-  - name: userhomedir
+  - name: homeuserlocal
     volume:
       size: 2Gi
 commands:
