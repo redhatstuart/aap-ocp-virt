@@ -2,10 +2,9 @@
 - name: Fix network interfaces of newly migrated virtual machines
   hosts: all
   tasks:
-  
-  - name: Delete VMware Network Interfaces
-    community.general.nmcli:
-      conn_name: '{{ item.conn_name }}'
-      state: absent
-    with_items:
-      - conn_name: ens33
+    - name: Delete VMware Network Interfaces
+      community.general.nmcli:
+        conn_name: '{{ item.conn_name }}'
+        state: absent
+      with_items:
+        - conn_name: ens33
