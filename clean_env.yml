@@ -1,5 +1,5 @@
 ---
-- name: Remove LAMP Stack on RHEL 9
+- name: Remove LAMP Stack on RHEL 9 Hosts
   hosts: all
   tasks:
   
