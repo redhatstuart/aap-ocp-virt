@@ -1,5 +1,5 @@
 ---
-- name: Fix network interfaces of newly migrated virtual machines
+- name: Fix network interfaces of newly migrated virtual machines from VMWare
   hosts: all
   tasks:
     - name: Delete VMware Network Interfaces
