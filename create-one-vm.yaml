@@ -1,0 +1,109 @@
+---
+- name: Deploy VMs
+  hosts: localhost
+  tasks:
+
+    - name: Create the 'linuxvm' namespace
+      kubernetes.core.k8s:
+        validate_certs: false
+        name: linuxvm
+        kind: Namespace
+        api_version: v1
+        state: present
+    - name: Create VM
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: kubevirt.io/v1
+          kind: VirtualMachine
+          metadata:
+            name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
+            namespace: linuxvm
+            labels:
+              app: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
+              kubevirt.io/dynamic-credentials-support: 'true'
+              vm.kubevirt.io/template: rhel9-server-small
+              vm.kubevirt.io/template.namespace: openshift
+              vm.kubevirt.io/template.revision: '1'
+              vm.kubevirt.io/template.version: v0.26.0
+          spec:
+            running: true
+            dataVolumeTemplates:
+              - apiVersion: cdi.kubevirt.io/v1beta1
+                kind: DataVolume
+                metadata:
+                  name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
+                spec:
+                  sourceRef:
+                    kind: DataSource
+                    name: rhel9
+                    namespace: openshift-virtualization-os-images
+                  storage:
+                    resources:
+                      requests:
+                        storage: 30Gi
+            template:
+              metadata:
+                labels:
+                  kubevirt.io/domain: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
+                  kubevirt.io/size: small
+              spec:
+                architecture: amd64
+                domain:
+                  cpu:
+                    cores: 1
+                    sockets: 1
+                    threads: 1
+                  devices:
+                    disks:
+                      - disk:
+                          bus: virtio
+                        name: rootdisk
+                      - disk:
+                          bus: virtio
+                        name: cloudinitdisk
+                    interfaces:
+                      - macAddress: "02:f3:be:00:00:{{ '%02x' | format(item.id) }}"
+                        masquerade: {}
+                        model: virtio
+                        name: default
+                    networkInterfaceMultiqueue: true
+                    rng: {}
+                  features:
+                    acpi: {}
+                    smm:
+                      enabled: true
+                  firmware:
+                    bootloader:
+                      efi: {}
+                  machine:
+                    type: pc-q35-rhel9.2.0
+                  memory:
+                    guest: 2Gi
+                networks:
+                  - name: default
+                    pod: {}
+                terminationGracePeriodSeconds: 180
+                volumes:
+                  - dataVolume:
+                      name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
+                    name: rootdisk
+                  - cloudInitConfigDrive:
+                      userData: |
+                        #cloud-config
+                        users:
+                          - name: cloud-user
+                            sudo: ['ALL=(ALL) NOPASSWD: ALL']
+                            groups: wheel
+                            shell: /bin/bash
+                            ssh_authorized_keys:
+                              - "{{ ssh_public_key }}"
+                            passwd: "{{ vm_password }}"
+                            lock_passwd: false
+                        chpasswd:
+                          list: |
+                            cloud-user:{{ vm_password }}
+                          expire: False
+                    name: cloudinitdisk
+      loop:
+        - { role: "smoketest", env: "smoke", id: 1 }
+     
