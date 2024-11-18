@@ -4,6 +4,9 @@
   connection: local
   gather_facts: false
 
+  collections:
+    - awx.awx
+
   pre_tasks:
     - name: Include vars from controller_configs dir
       ansible.builtin.include_vars:
@@ -11,4 +14,4 @@
         extensions: [yml]
 
   roles:
-    - { role: infra.controller_configuration.job_templates, when: controller_templates is defined and controller_oauthtoken is defined }
+    - { role: infra.aap_configuration.controller_job_templates}

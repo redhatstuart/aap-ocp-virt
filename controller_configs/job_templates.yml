@@ -3,13 +3,13 @@ controller_templates:
   - name: "Migrate 1: VMware to OpenShift Virtualization"
     job_type: run
     inventory: localhost
-    execution_environment: OCP Virt EE
-    project: AAP OCP Virtualization Integration
+    execution_environment: ocp-vmw-infra-ee
+    project: redhatstuart/aap-ocp-virt
     playbook: migrate.yml
     credentials:
       - ocp-virt-vault
-      - helios-vcsa
-      - Dell APEX OpenShift Bearer Token
+      - Helios vCenter Credential
+      - AAP Bearer Token
     survey_enabled: true
     survey_spec: {
       "name": "Basic Survey",
