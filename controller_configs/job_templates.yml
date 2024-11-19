@@ -42,7 +42,7 @@ controller_templates:
         {
           "question_description": "vms to migrate",
           "min": 0,
-          "default": "dj01",
+          "default": "",
           "max": 0,
           "required": true,
           "choices": "{{ vms_for_survey }}",
