@@ -38,11 +38,18 @@
 - name: Collect vm names for survey
   ansible.builtin.set_stats:
     data:
-      vms_for_survey: "{{ vms_for_survey | default () + ( present_vms.name + '\n' ) }}"
+      vms_for_survey: "{{ vms_for_survey | default () + [present_vms.name] }}"
+  loop: "{{ vm_name_id_pairs }}"
+  loop_control:
+    loop_var: present_vms
+
+- name: Collect vm names for printing
+  ansible.builtin.set_fact:
+    vms_troubleshooting: "{{ vms_troubleshooting | default () + [present_vms.name] }}"
   loop: "{{ vm_name_id_pairs }}"
   loop_control:
     loop_var: present_vms
 
 - name: Print final string
   ansible.builtin.debug:
-    vms_for_survey: "{{ vms_for_survey }}"
+    vms_for_survey: "{{ vms_troubleshooting }}"
