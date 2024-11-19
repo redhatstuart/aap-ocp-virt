@@ -14,4 +14,4 @@
         extensions: [yml]
 
   roles:
-    - { role: infra.aap_configuration.controller_job_templates}
+    - { role: infra.aap_configuration.controller_job_templates }
