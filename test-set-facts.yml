@@ -4,6 +4,13 @@
   gather_facts: false
 
   tasks:
+    - name: Combine items into a list
+      ansible.builtin.set_fact:
+        list_of_things: "{{ list_of_things | default([]) + [item] }}"
+      loop:
+        - thing1
+        - thing2
+        - thing3
     - name: Print vms for survey
       ansible.builtin.debug:
-        msg: "{{ vms_for_survey }}"
+        msg: "{{ list_of_things }}"
