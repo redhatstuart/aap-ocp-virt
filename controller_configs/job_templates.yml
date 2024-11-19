@@ -28,18 +28,6 @@ controller_templates:
           "type": "text"
         },
         {
-          "question_description": "vms to migrate",
-          "min": 0,
-          "default": "",
-          "max": 0,
-          "required": true,
-          "choices": "{{ vms_for_survey }}",
-          "new_question": true,
-          "variable": "user_selected_vm_names",
-          "question_name": "Which VM(s) to migrate?",
-          "type": "multiselect"
-        },
-        {
           "question_description": "namespace",
           "min": 5,
           "default": "virtualmachines",
@@ -50,6 +38,18 @@ controller_templates:
           "variable": "migration_target_namespace",
           "question_name": "Enter the target OpenShift project namespace for the virtual machines?",
           "type": "text"
+        },
+        {
+          "question_description": "vms to migrate",
+          "min": 0,
+          "default": "dj01",
+          "max": 0,
+          "required": true,
+          "choices": "{{ vms_for_survey }}",
+          "new_question": true,
+          "variable": "user_selected_vm_names",
+          "question_name": "Which VM(s) to migrate?",
+          "type": "multiselect"
         }
       ]
     }
