@@ -3,7 +3,7 @@ controller_templates:
   - name: "Migrate 1: VMware to OpenShift Virtualization"
     job_type: run
     inventory: localhost
-    execution_environment: ocp-vmw-infra-ee
+    execution_environment: ocp-ocpvirt-vmw-infra-ee
     project: redhatstuart/aap-ocp-virt
     playbook: migrate.yml
     credentials:

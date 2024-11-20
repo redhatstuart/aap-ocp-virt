@@ -4,8 +4,8 @@
   connection: local
   gather_facts: false
 
-  collections:
-    - awx.awx
+  # collections:
+   # - awx.awx
 
   pre_tasks:
     - name: Include vars from controller_configs dir
