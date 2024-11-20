@@ -4,9 +4,6 @@
   connection: local
   gather_facts: false
 
-  # collections:
-   # - awx.awx
-
   pre_tasks:
     - name: Include vars from controller_configs dir
       ansible.builtin.include_vars:
