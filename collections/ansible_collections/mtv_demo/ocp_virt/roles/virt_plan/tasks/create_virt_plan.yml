@@ -110,7 +110,7 @@
 
 - name: Capture the datastore id
   ansible.builtin.set_fact:
-    datastore_id: "{{ value.datastore }}"
+    datastore_id: "{{ item.datastore }}"
   loop: "{{ all_the_datastores.value }}"
 
 - name: Print the datastore id
