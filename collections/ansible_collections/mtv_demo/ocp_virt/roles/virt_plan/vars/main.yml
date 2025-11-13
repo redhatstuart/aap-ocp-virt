@@ -1,8 +1,8 @@
 ---
 # vars file for virt-plan
 plan_name: ansible-mtv
-networkmap_name: ansible-network-map
-storagemap_name: ansible-storage-map
+networkmap_name: ansible-network-map-dont-delete
+storagemap_name: ansible-storage-map-dont-delete
 portgroup_name: "helios-vm-10.253.49.0_25--v450"
 vm_datastore: cl1a-local-01
 migration_namespace: "openshift-mtv"
