@@ -104,13 +104,13 @@
     vcenter_validate_certs: false
   register: all_the_datastores
 
-- name: Print all datastore names
+- name: Print all_the_datastores.value
   ansible.builtin.debug: 
-    msg: "{{ all_the_datastores }}"
+    msg: "{{ all_the_datastores.value }}"
 
 - name: Capture the datastore id
   ansible.builtin.set_fact:
-    datastore_id: "{{ item.datastore }}"
+    datastore_id: "{{ value.datastore }}"
   loop: "{{ all_the_datastores.value }}"
   when: item.name == vm_datastore
 
