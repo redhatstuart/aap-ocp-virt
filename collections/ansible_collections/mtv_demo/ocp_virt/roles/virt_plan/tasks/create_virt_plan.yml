@@ -112,7 +112,6 @@
   ansible.builtin.set_fact:
     datastore_id: "{{ value.datastore }}"
   loop: "{{ all_the_datastores.value }}"
-  when: item.name == vm_datastore
 
 - name: Print the datastore id
   ansible.builtin.debug: 
