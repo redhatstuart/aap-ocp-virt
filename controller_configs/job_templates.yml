@@ -9,7 +9,7 @@ controller_templates:
     credentials:
       - ocp-virt-vault
       - Helios vCenter Credential
-      - AAP Bearer Token
+      - AAP Bearer Token for Dell ACP
     survey_enabled: true
     survey_spec: {
       "name": "Basic Survey",
