@@ -128,7 +128,7 @@
 #     definition: "{{ lookup('template', 'datastore.yaml.j2' ) | from_yaml }}"
 #     state: present
 
-- name: Deploy Virt Plan
+- name: Deploy Migration Plan
   kubernetes.core.k8s:
     state: present
     definition:
@@ -172,3 +172,6 @@
         plan:
           name: "{{ plan_name }}"
           namespace: "{{ migration_namespace }}"
+        stage: Migrate
+    wait: true
+    wait_timeout: 30
