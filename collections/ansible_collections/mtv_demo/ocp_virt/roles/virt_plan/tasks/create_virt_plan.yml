@@ -173,13 +173,3 @@
           name: "{{ plan_name }}"
           namespace: "{{ migration_namespace }}"
 
-- name: Trigger migration plan execution by patching spec.run=true
-  kubernetes.core.k8s_json_patch:
-    kind: MigrationPlan
-    api_version: forklift.konveyor.io/v1beta1
-    namespace: "{{ migration_namespace }}"
-    name: "{{ plan_name }}"
-    patch:
-      - op: replace
-        path: /spec/run
-        value: true
